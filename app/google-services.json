@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "189336412540",
+    "project_id": "borderhacks2021",
+    "storage_bucket": "borderhacks2021.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:189336412540:android:8fa731deebc1847fb184f9",
+        "android_client_info": {
+          "package_name": "com.elitegadgetlabs.borderhacks2021app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "189336412540-bdl3t61bn5tbrjp20ck4mmfri9g48l6p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.elitegadgetlabs.borderhacks2021app",
+            "certificate_hash": "c441250226802531547d35fcff6b6ca61c297038"
+          }
+        },
+        {
+          "client_id": "189336412540-4gibfdd05efg185kob3eku29g4k5hhdc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACZLpkujAHRKUL-26rKGQQxfnxhk0otZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "189336412540-4gibfdd05efg185kob3eku29g4k5hhdc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
