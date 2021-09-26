@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 @ExperimentalComposeUiApi
 @Composable
 fun HomeScreen(navController: NavController, filterViewModel: FilterViewModel, mainViewModel: MainViewModel = MainViewModel()) {
-    val parks = mainViewModel.getParkData()
+    val parks = mainViewModel.parks
     var filterDialogState = remember { mutableStateOf(false) }
     var queryText = remember { mutableStateOf(TextFieldValue("")) }
 

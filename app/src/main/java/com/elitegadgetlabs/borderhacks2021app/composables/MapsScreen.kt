@@ -43,9 +43,11 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import com.elitegadgetlabs.borderhacks2021app.MainViewModel
 import com.elitegadgetlabs.borderhacks2021app.R
 import com.elitegadgetlabs.borderhacks2021app.components.GMap
+import com.elitegadgetlabs.borderhacks2021app.models.Park
 import com.elitegadgetlabs.borderhacks2021app.ui.theme.Shapes
 import com.elitegadgetlabs.borderhacks2021app.ui.theme.appBackgroundColor
 import com.elitegadgetlabs.borderhacks2021app.viewModels.FilterViewModel
@@ -55,6 +57,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.data.geojson.GeoJsonLineStringStyle
 import com.google.maps.android.data.geojson.GeoJsonPolygonStyle
@@ -66,28 +69,44 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @Composable
-fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  mainViewModel: MainViewModel = MainViewModel()) {
+fun MapsScreen(
+    navController: NavController,
+    filterViewModel: FilterViewModel,
+    mainViewModel: MainViewModel
+) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
     var selectedState = remember { mutableStateOf("maps_screen") }
-
+    var markerClicked = remember { mutableStateOf(false) }
+    var markerVal = remember { mutableStateOf("apple") }
     var filterDialogState = remember { mutableStateOf(false) }
     var queryText = remember { mutableStateOf(TextFieldValue("")) }
-    val letterList = arrayListOf<String>("apple", "banana", "pineapple", "orange", "pomegranate")
+    val letterList = (mainViewModel.parks?.parks as ArrayList<Park>).filter { true }
+        .map { it.name } as ArrayList<String>
 
 
     val coroutineScope = rememberCoroutineScope()
 
-    fun navigate(dest: String){
+    fun navigate(dest: String) {
         coroutineScope.launch {
             delay(1000)
-            navController.navigate(dest){
+            navController.navigate(dest) {
                 popUpTo = navController.graph.startDestinationId
                 launchSingleTop = true
             }
         }
+    }
+
+    @Composable
+    fun miniDetail(park: Park) {
+        VerticalListItem(
+            park = park,
+            modifier = Modifier.clickable {  },
+            context = navController.context
+        )
     }
 
 
@@ -148,41 +167,67 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
                 }
             }
 
-            val parks = mainViewModel.getParkData()
-
-            for (park in parks!!.parks) {
-                googleMap.addMarker(
-                    MarkerOptions()
-                        .position(LatLng(park.location[0], park.location[1]))
-                        .title(park.name)
-                )
+//            mainViewModel.parks.parks.forEachIndexed{index, park ->
+//
+//            }
+            filterViewModel.currentFilters.observeForever { currentFilter ->
+                googleMap.clear()
+                for (park in mainViewModel.parks.parks) {
+                    if (currentFilter?.let { it1 ->
+                            park.tags.intersect(it1.asIterable()).isNotEmpty()
+                        } == true) {
+                        googleMap.addMarker(
+                            MarkerOptions()
+                                .position(LatLng(park.location[0], park.location[1]))
+                                .title(park.name)
+                        )
+                    }
+                }
             }
 
-            val parksLayer = mainViewModel.getParkGeoData(googleMap)
-            for (feature in parksLayer?.features!!) {
-//                    Log.d("debug", feature.getProperty("ADDRESS"))
-                val polygonStyle = GeoJsonPolygonStyle()
-                polygonStyle.strokeColor = Color.Red.toArgb()
-                polygonStyle.fillColor = Color.Red.toArgb()
-                feature.polygonStyle = polygonStyle
+            googleMap.setOnMarkerClickListener { marker ->
+                markerClicked.value = true
+                markerVal.value = marker.title!!
+                return@setOnMarkerClickListener true
             }
-            parksLayer.addLayerToMap()
 
-            val trailsLayer = mainViewModel.getTrailData(googleMap)
-            for (feature in trailsLayer?.features!!) {
-                val polygonStyle = GeoJsonLineStringStyle()
-                polygonStyle.color = Color.Red.toArgb()
-                feature.lineStringStyle = polygonStyle
+            googleMap.setOnMapClickListener {
+                markerClicked.value = false
             }
-            trailsLayer.addLayerToMap()
+
+
+//            mainViewModel.parksLayer = mainViewModel.getParkGeoData(googleMap)
+//            for (feature in mainViewModel.parksLayer?.features!!) {
+////                    Log.d("debug", feature.getProperty("ADDRESS"))
+//                val polygonStyle = GeoJsonPolygonStyle()
+//                polygonStyle.strokeColor = Color.Red.toArgb()
+//                polygonStyle.fillColor = Color.Red.toArgb()
+//                feature.polygonStyle = polygonStyle
+//            }
+//            mainViewModel.parksLayer!!.addLayerToMap()
+//
+//            mainViewModel.trailsLayer = mainViewModel.getTrailData(googleMap)
+//            for (feature in mainViewModel.trailsLayer?.features!!) {
+//                val polygonStyle = GeoJsonLineStringStyle()
+//                polygonStyle.color = Color.Red.toArgb()
+//                feature.lineStringStyle = polygonStyle
+//            }
+//            mainViewModel.trailsLayer!!.addLayerToMap()
 
 
         }
 
 
 
-        BottomAppBar(elevation = 12.dp, backgroundColor = MaterialTheme.colors.surface, modifier = Modifier.align(
-            Alignment.BottomCenter)) {
+
+
+        BottomAppBar(
+            elevation = 12.dp,
+            backgroundColor = MaterialTheme.colors.surface,
+            modifier = Modifier.align(
+                Alignment.BottomCenter
+            )
+        ) {
             BottomNavigationItem(
                 icon = {
                     Icon(Icons.Outlined.Home, "Home")
@@ -243,12 +288,15 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
             )
 
 
-            Spacer(modifier = Modifier.height(30.dp))  //vertical spacer
+            Spacer(modifier = Modifier.height(350.dp))  //vertical spacer
 
+            if (markerClicked.value) {
+                miniDetail(park = mainViewModel.parks.parks.filter { park -> park.name == markerVal.value }[0])
+            }
 
         }
 
-        if (filterDialogState.value){
+        if (filterDialogState.value) {
             Snackbar(
                 modifier = Modifier
                     .fillMaxWidth(0.97f)
@@ -256,7 +304,7 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
                     .align(Alignment.Center)
                     .padding(horizontal = 0.dp, vertical = 12.dp),
                 backgroundColor = Color.White
-            ){
+            ) {
                 Column {
                     Row(
                         modifier = Modifier
@@ -264,15 +312,19 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
                             .fillMaxWidth()
                             .background(color = appBackgroundColor, shape = Shapes.medium),
                         Arrangement.SpaceEvenly
-                    ){
+                    ) {
                         IconButton(onClick = {
-                        filterDialogState.value = false
+                            filterDialogState.value = false
                         }) {
                             Icon(Icons.Filled.Close, "close icon", tint = Color.White)
                         }
 
-                        Text(text = "Filters", color = White, modifier = Modifier.align(Alignment.CenterVertically),
-                            style = MaterialTheme.typography.h6)
+                        Text(
+                            text = "Filters",
+                            color = White,
+                            modifier = Modifier.align(Alignment.CenterVertically),
+                            style = MaterialTheme.typography.h6
+                        )
 
                         IconButton(onClick = {
 
@@ -292,6 +344,8 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
             }
 
         }
+
+
 
     }
 
