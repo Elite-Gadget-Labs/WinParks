@@ -2,6 +2,7 @@ package com.elitegadgetlabs.borderhacks2021app.composables
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,8 +17,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -28,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.elitegadgetlabs.borderhacks2021app.HorizontalDottedProgressBar
 import com.elitegadgetlabs.borderhacks2021app.R
+import com.elitegadgetlabs.borderhacks2021app.ui.theme.appBackgroundColor
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.delay
@@ -118,11 +122,16 @@ fun LoginScreen(navController: NavController) { //, mainViewModel: MainViewModel
         val emailInteractionState = remember { MutableInteractionSource() }
 
         //The LazyColumn is a vertically scrolling list that only composes and lays out its currently visible items.
-        LazyColumn(
+        arrayOf(LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+
         ) {
+
+            item { Image(painterResource(id = R.drawable.winparks_logo), "WinParks Logo") }
+
             item { Spacer(modifier = Modifier.height(20.dp)) } //vertical spacer
 
             //item { LottieWorkingLoadingView(context = LocalContext.current) } //Main Image/Animation
@@ -137,7 +146,7 @@ fun LoginScreen(navController: NavController) { //, mainViewModel: MainViewModel
 
             item {
                 Text(
-                    text = "We have missed you, Let's start by Sign In!",
+                    text = "We have missed you, Let's start by Signing In!",
                     style = MaterialTheme.typography.caption,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
@@ -188,14 +197,13 @@ fun LoginScreen(navController: NavController) { //, mainViewModel: MainViewModel
                                 } else {
                                     PasswordVisualTransformation()
                                 }
-                        }){
+                        }) {
                             Icon(
-                                imageVector = if (isPasswordVisible){
+                                imageVector = if (isPasswordVisible) {
                                     ImageVector.vectorResource(id = R.drawable.baseline_visibility_24)
-                                }
-                                else{
+                                } else {
                                     ImageVector.vectorResource(id = R.drawable.baseline_visibility_off_24)
-                                    },
+                                },
                                 "eyeSlash icon",
                                 tint = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
                             )
@@ -224,9 +232,10 @@ fun LoginScreen(navController: NavController) { //, mainViewModel: MainViewModel
 
                         emailHasError = invalidEmailInput(userEmail.text)
                         passwordHasError = invalidPasswordInput(userPassword.text)
-                        loading = emailHasError == false && passwordHasError==false
+                        loading = emailHasError == false && passwordHasError == false
                         Log.d("debug", loading.toString())
                     },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = appBackgroundColor),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp)
@@ -273,7 +282,7 @@ fun LoginScreen(navController: NavController) { //, mainViewModel: MainViewModel
                 val annotatedString = remember {
                     AnnotatedString.Builder("Don't have an account? Register")
                         .apply {
-                            addStyle(style = SpanStyle(color = primaryColor), 23, 31)
+                            addStyle(style = SpanStyle(color = appBackgroundColor), 23, 31)
                         }
                 }
                 Text(
@@ -282,7 +291,7 @@ fun LoginScreen(navController: NavController) { //, mainViewModel: MainViewModel
                         .fillMaxWidth()
                         .padding(vertical = 16.dp)
                         .clickable(onClick = {
-                            navController.navigate("register_screen"){
+                            navController.navigate("register_screen") {
                                 popUpTo = navController.graph.startDestinationId
                                 launchSingleTop = true
                             }
@@ -292,7 +301,7 @@ fun LoginScreen(navController: NavController) { //, mainViewModel: MainViewModel
             }
 
             item { Spacer(modifier = Modifier.height(100.dp)) }
-        }
+             })
     }
 }
 

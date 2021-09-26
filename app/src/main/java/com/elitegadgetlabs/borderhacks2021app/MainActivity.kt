@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity(), LifecycleOwner {
     fun ShowLoginScreen(){
         val navController = rememberNavController()
 
-        NavHost(navController = navController, startDestination = "maps_screen", builder = {
+        NavHost(navController = navController, startDestination = "login_screen", builder = {
             composable("login_screen", content = { LoginScreen(navController = navController) })
             composable("profile_screen", content = { ProfileScreen(navController = navController) })
             composable("home_screen", content = { HomeScreen(navController = navController, filterViewModel = filterViewModel) })
