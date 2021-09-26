@@ -4,6 +4,7 @@ import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -21,12 +22,17 @@ import androidx.navigation.compose.rememberNavController
 import com.elitegadgetlabs.borderhacks2021app.components.GMap
 import com.elitegadgetlabs.borderhacks2021app.composables.*
 import com.elitegadgetlabs.borderhacks2021app.ui.theme.BorderHacks2021AppTheme
+import com.elitegadgetlabs.borderhacks2021app.viewModels.FilterViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {
+    private val filterViewModel: FilterViewModel by viewModels()
+
     @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        filterViewModel = FilterViewModel()
 
         //Requesting the user for app permissions
         ActivityCompat.requestPermissions(
@@ -57,20 +63,21 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+    @ExperimentalComposeUiApi
+    @Composable
+    fun ShowLoginScreen(){
+        val navController = rememberNavController()
+
+        NavHost(navController = navController, startDestination = "filter_screen", builder = {
+            composable("login_screen", content = { LoginScreen(navController = navController) })
+            composable("filter_screen", content = { FilterScreen(navController = navController, filterViewModel = filterViewModel) })
+            composable("home_screen", content = { HomeScreen(navController = navController) })
+            composable("register_screen", content = { RegisterScreen(navController = navController) })
+            composable("maps_screen", content = { MapsScreen(navController = navController) })
+            composable("email_confirmation_screen", content = { EmailConfirmationScreen(navController = navController) })
+        })
+    }
 }
 
-@ExperimentalComposeUiApi
-@Composable
-fun ShowLoginScreen(){
-    val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "home_screen", builder = {
-        composable("login_screen", content = { LoginScreen(navController = navController) })
-        composable("filter_screen", content = { FilterScreen(navController = navController) })
-        composable("home_screen", content = { HomeScreen(navController = navController) })
-        composable("register_screen", content = { RegisterScreen(navController = navController) })
-        composable("maps_screen", content = { MapsScreen(navController = navController) })
-        composable("email_confirmation_screen", content = { EmailConfirmationScreen(navController = navController) })
-    })
-}
 
