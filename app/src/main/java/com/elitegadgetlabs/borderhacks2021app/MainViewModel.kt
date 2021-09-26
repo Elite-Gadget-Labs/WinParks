@@ -3,6 +3,7 @@ package com.elitegadgetlabs.borderhacks2021app
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.elitegadgetlabs.borderhacks2021app.models.Filter
 import com.elitegadgetlabs.borderhacks2021app.models.ParkModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices

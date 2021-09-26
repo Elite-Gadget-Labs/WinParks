@@ -54,6 +54,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.data.geojson.GeoJsonPolygonStyle
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.intellij.lang.annotations.JdkConstants
@@ -77,6 +78,7 @@ fun MapsScreen(navController: NavController, mainViewModel: MainViewModel = Main
     val letterList = arrayListOf<String>("apple", "banana", "pineapple", "orange", "pomegranate")
     var filteredLetters: ArrayList<String>
 
+    val coroutineScope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -232,7 +234,12 @@ fun MapsScreen(navController: NavController, mainViewModel: MainViewModel = Main
                     else{
                         IconButton(
                             onClick = {
-                                filterDialogState.value = true
+                                coroutineScope.launch {
+                                    delay(1000)
+                                    navController.navigate("filter_screen"){
+
+                                    }
+                                }
                             }
                         ) {
                             Icon(
