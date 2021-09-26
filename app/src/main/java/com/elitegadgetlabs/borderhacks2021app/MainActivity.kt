@@ -22,6 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.elitegadgetlabs.borderhacks2021app.components.GMap
 import com.elitegadgetlabs.borderhacks2021app.composables.*
+import com.elitegadgetlabs.borderhacks2021app.models.Park
 import com.elitegadgetlabs.borderhacks2021app.ui.theme.BorderHacks2021AppTheme
 import com.elitegadgetlabs.borderhacks2021app.viewModels.FilterViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -70,10 +71,11 @@ class MainActivity : ComponentActivity(), LifecycleOwner {
     fun ShowLoginScreen(){
         val navController = rememberNavController()
 
-        NavHost(navController = navController, startDestination = "login_screen", builder = {
+        NavHost(navController = navController, startDestination = "park_detail_screen", builder = {
             composable("login_screen", content = { LoginScreen(navController = navController) })
             composable("profile_screen", content = { ProfileScreen(navController = navController) })
             composable("home_screen", content = { HomeScreen(navController = navController, filterViewModel = filterViewModel) })
+            composable("park_detail_screen", content = { ParkDetailScreen(navController = navController, "url") })
             composable("register_screen", content = { RegisterScreen(navController = navController) })
             composable("maps_screen", content = { MapsScreen(navController = navController, filterViewModel = filterViewModel) })
             composable("email_confirmation_screen", content = { EmailConfirmationScreen(navController = navController) })

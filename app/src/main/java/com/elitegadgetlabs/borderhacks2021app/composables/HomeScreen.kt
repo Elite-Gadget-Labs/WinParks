@@ -87,7 +87,7 @@ fun HomeScreen(navController: NavController, filterViewModel: FilterViewModel, m
                     VerticalListItem(
                         park = it,
                         Modifier.padding(start = 16.dp, bottom = 16.dp),
-                        navController.context
+                        navController
                     )
                 }
             }

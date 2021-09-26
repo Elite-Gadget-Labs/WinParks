@@ -10,6 +10,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -18,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.elitegadgetlabs.borderhacks2021app.models.Park
@@ -25,14 +27,27 @@ import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.coil.CoilImage
 import com.elitegadgetlabs.borderhacks2021app.R
 import com.skydoves.landscapist.ShimmerParams
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @ExperimentalCoilApi
 @Composable
-fun VerticalListItem(park: Park, modifier: Modifier = Modifier, context: Context) {
+fun VerticalListItem(park: Park, modifier: Modifier = Modifier, navController:NavController) {
+    val context = navController.context
     val typography = MaterialTheme.typography
+    val coroutineScope = rememberCoroutineScope()
     Card(
         modifier = modifier
-            .fillMaxWidth().clickable{ Toast.makeText(context, park.name, Toast.LENGTH_LONG).show()},
+            .fillMaxWidth().clickable{
+                Toast.makeText(context, park.name, Toast.LENGTH_LONG).show()
+                coroutineScope.launch {
+                    delay(1000)
+                    navController.navigate("park_detail_screen"){
+                        popUpTo = navController.graph.startDestinationId
+                        launchSingleTop = true
+                    }
+                }
+                                     },
         shape = RoundedCornerShape(12.dp),
         elevation = 10.dp
     ) {
