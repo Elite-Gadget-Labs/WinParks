@@ -72,11 +72,11 @@ class MainActivity : ComponentActivity(), LifecycleOwner {
     fun ShowLoginScreen(){
         val navController = rememberNavController()
 
-        NavHost(navController = navController, startDestination = "park_detail_screen", builder = {
+        NavHost(navController = navController, startDestination = "maps_screen", builder = {
             composable("login_screen", content = { LoginScreen(navController = navController) })
             composable("profile_screen", content = { ProfileScreen(navController = navController) })
             composable("home_screen", content = { HomeScreen(navController = navController, filterViewModel = filterViewModel) })
-            composable("park_detail_screen", content = { ParkDetailScreen(navController = navController, "url") })
+            composable("park_detail_screen", content = { ParkDetailScreen(navController = navController, mainViewModel = mainViewModel) })
             composable("register_screen", content = { RegisterScreen(navController = navController) })
             composable("maps_screen", content = { MapsScreen(navController = navController, filterViewModel = filterViewModel, mainViewModel = mainViewModel)})
             composable("email_confirmation_screen", content = { EmailConfirmationScreen(navController = navController) })

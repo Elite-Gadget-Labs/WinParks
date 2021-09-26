@@ -45,8 +45,13 @@ import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
-fun ParkDetailScreen(navController: NavController, img_url: String) {
-
+fun ParkDetailScreen(navController: NavController, mainViewModel: MainViewModel) {
+    val imgRead = remember{
+        mutableStateOf(false)
+    }
+    val localprk = remember{
+        mutableStateOf("")
+    }
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -66,25 +71,32 @@ fun ParkDetailScreen(navController: NavController, img_url: String) {
 
                 Text("Brock Park")
 
-                CoilImage(
-                    imageModel = img_url,
-                    // Crop, Fit, Inside, FillHeight, FillWidth, None
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .height(200.dp)
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                        .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)),
-                    shimmerParams = ShimmerParams(
-                        baseColor = MaterialTheme.colors.background,
-                        highlightColor = Color.LightGray,
-                        durationMillis = 350,
-                        dropOff = 0.65f,
-                        tilt = 20f
-                    ),
-                    // shows an error ImageBitmap when the request failed.
-                    error = ImageBitmap.imageResource(R.drawable.brock_park)
-                )
+                mainViewModel.currentPark.observeForever{
+                    imgRead.value = true
+                    localprk.value = it.img_url
+                }
+
+                if (imgRead.value){
+                    CoilImage(
+                        imageModel = localprk.value,
+                        // Crop, Fit, Inside, FillHeight, FillWidth, None
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .height(200.dp)
+                            .fillMaxWidth()
+                            .align(Alignment.CenterHorizontally)
+                            .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)),
+                        shimmerParams = ShimmerParams(
+                            baseColor = MaterialTheme.colors.background,
+                            highlightColor = Color.LightGray,
+                            durationMillis = 350,
+                            dropOff = 0.65f,
+                            tilt = 20f
+                        ),
+                        // shows an error ImageBitmap when the request failed.
+                        error = ImageBitmap.imageResource(R.drawable.brock_park)
+                    )
+                }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     ratingStar()

@@ -1,9 +1,11 @@
 package com.elitegadgetlabs.borderhacks2021app
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.elitegadgetlabs.borderhacks2021app.models.Filter
+import com.elitegadgetlabs.borderhacks2021app.models.Park
 import com.elitegadgetlabs.borderhacks2021app.models.ParkModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -23,6 +25,9 @@ class MainViewModel: ViewModel() {
 
     private val client = OkHttpClient()
 
+    val currentPark: MutableLiveData<Park> by lazy {
+        MutableLiveData<Park>()
+    }
 
     fun httpRequest(url: String): Response? {
 

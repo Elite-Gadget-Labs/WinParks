@@ -28,6 +28,7 @@ import androidx.compose.material.icons.outlined.Place
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import coil.annotation.ExperimentalCoilApi
 import com.elitegadgetlabs.borderhacks2021app.ui.theme.Shapes
 import com.elitegadgetlabs.borderhacks2021app.ui.theme.appBackgroundColor
 import com.elitegadgetlabs.borderhacks2021app.viewModels.FilterViewModel
@@ -37,6 +38,7 @@ import kotlinx.coroutines.launch
 //import coil.annotation.ExperimentalCoilApi
 
 
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @Composable
 fun HomeScreen(navController: NavController, filterViewModel: FilterViewModel, mainViewModel: MainViewModel = MainViewModel()) {
@@ -83,7 +85,7 @@ fun HomeScreen(navController: NavController, filterViewModel: FilterViewModel, m
                 modifier = Modifier.padding(end = 16.dp)
             ) {
 
-                items(parks?.parks as ArrayList<Park>) {
+                items(parks.parks as ArrayList<Park>) {
                     VerticalListItem(
                         park = it,
                         Modifier.padding(start = 16.dp, bottom = 16.dp),

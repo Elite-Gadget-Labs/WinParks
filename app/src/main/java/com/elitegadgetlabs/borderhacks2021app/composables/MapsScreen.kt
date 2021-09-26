@@ -101,10 +101,11 @@ fun MapsScreen(
     }
 
     @Composable
-    fun miniDetail(park: Park) {
+    fun miniDetail(p: Park) {
+        Log.d("debug", p.img_url)
         VerticalListItem(
-            park = park,
-            modifier = Modifier.clickable {  },
+            park = p,
+            modifier = Modifier.clickable { mainViewModel.currentPark.value = p },
             navController = navController
         )
     }
@@ -291,7 +292,7 @@ fun MapsScreen(
             Spacer(modifier = Modifier.height(350.dp))  //vertical spacer
 
             if (markerClicked.value) {
-                miniDetail(park = mainViewModel.parks.parks.filter { park -> park.name == markerVal.value }[0])
+                miniDetail(p = mainViewModel.parks.parks.filter { park -> park.name == markerVal.value }[0])
             }
 
         }
