@@ -56,6 +56,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.data.geojson.GeoJsonLineStringStyle
 import com.google.maps.android.data.geojson.GeoJsonPolygonStyle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -70,16 +71,12 @@ import kotlin.collections.ArrayList
 fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  mainViewModel: MainViewModel = MainViewModel()) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
-    var selectedState = remember { mutableStateOf("maps_screen")}
+    var selectedState = remember { mutableStateOf("maps_screen") }
 
-    var filterDialogState = remember { mutableStateOf(false)}
-
+    var filterDialogState = remember { mutableStateOf(false) }
     var queryText = remember { mutableStateOf(TextFieldValue("")) }
-
-    val keyboardController = LocalSoftwareKeyboardController.current
-
     val letterList = arrayListOf<String>("apple", "banana", "pineapple", "orange", "pomegranate")
-    var filteredLetters: ArrayList<String>
+
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -93,7 +90,8 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
             modifier = Modifier.fillMaxSize()
         ) { googleMap ->
 
-            val fusedLocationProviderClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(navController.context as Activity)
+            val fusedLocationProviderClient: FusedLocationProviderClient =
+                LocationServices.getFusedLocationProviderClient(navController.context as Activity)
 //                            googleMap.setOnMapClickListener(this@MainActivity)
 
             if (ActivityCompat.checkSelfPermission(
@@ -152,16 +150,23 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
                 )
             }
 
-            val layer = mainViewModel.getParkGeoData(googleMap)
-
-            for (feature in layer?.features!!) {
-                Log.d("debug", feature.getProperty("ADDRESS"))
+            val parksLayer = mainViewModel.getParkGeoData(googleMap)
+            for (feature in parksLayer?.features!!) {
+//                    Log.d("debug", feature.getProperty("ADDRESS"))
                 val polygonStyle = GeoJsonPolygonStyle()
                 polygonStyle.strokeColor = Color.Red.toArgb()
                 polygonStyle.fillColor = Color.Red.toArgb()
                 feature.polygonStyle = polygonStyle
             }
-            layer.addLayerToMap()
+            parksLayer.addLayerToMap()
+
+            val trailsLayer = mainViewModel.getTrailData(googleMap)
+            for (feature in trailsLayer?.features!!) {
+                val polygonStyle = GeoJsonLineStringStyle()
+                polygonStyle.color = Color.Red.toArgb()
+                feature.lineStringStyle = polygonStyle
+            }
+            trailsLayer.addLayerToMap()
 
 
         }
@@ -219,34 +224,12 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
 
             ) {
 
-
-            TextField(
-                value = queryText.value,
-
-                trailingIcon = {
-                    if (queryText.value != TextFieldValue("")) {
-                        IconButton(
-                            onClick = {
-                                queryText.value = TextFieldValue("")
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Close,
-                                contentDescription = "Close",
-                                modifier = Modifier
-                                    .padding(15.dp)
-                                    .size(24.dp)
-                            )
-                        }
-                    }
-                    else{
-                        IconButton(
-                            onClick = {
-                                filterDialogState.value = true
-                                /*
-                                coroutineScope.launch {
-                                    delay(1000)
-                                    navController.navigate("filter_screen"){
+            SearchTextField(
+                queryText,
+                filterDialogState,
+                letterList,
+                navController
+            )
 
                                     }
                                 }*/
