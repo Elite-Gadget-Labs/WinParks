@@ -105,7 +105,7 @@ fun MapsScreen(
         VerticalListItem(
             park = park,
             modifier = Modifier.clickable {  },
-            context = navController.context
+            navController = navController
         )
     }
 

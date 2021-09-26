@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity(), LifecycleOwner {
             composable("home_screen", content = { HomeScreen(navController = navController, filterViewModel = filterViewModel) })
             composable("park_detail_screen", content = { ParkDetailScreen(navController = navController, "url") })
             composable("register_screen", content = { RegisterScreen(navController = navController) })
-            composable("maps_screen", content = { MapsScreen(navController = navController, filterViewModel = filterViewModel) })
+            composable("maps_screen", content = { MapsScreen(navController = navController, filterViewModel = filterViewModel, mainViewModel = mainViewModel)})
             composable("email_confirmation_screen", content = { EmailConfirmationScreen(navController = navController) })
         })
     }
