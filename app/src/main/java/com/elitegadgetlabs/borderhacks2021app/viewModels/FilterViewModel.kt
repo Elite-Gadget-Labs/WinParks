@@ -1,7 +1,6 @@
 package com.elitegadgetlabs.borderhacks2021app.viewModels
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.elitegadgetlabs.borderhacks2021app.R
@@ -171,7 +170,16 @@ class FilterViewModel : ViewModel() {
         )
     )
 
+    var _filterDialogFlag: MutableLiveData<Boolean> = MutableLiveData(false)
+    val filterDialogFlag: MutableLiveData<Boolean> get() = _filterDialogFlag
 
+//    fun getDialogClosed(): Boolean? {
+//        return filterDialogClosed.value
+//    }
+//
+//    fun setDialogClose(boolean: Boolean) {
+//        filterDialogClosed.value = boolean
+//    }
 
 
     private var filterBehaviourList : MutableLiveData<MutableList<Boolean>> = MutableLiveData(createBehaviourList())

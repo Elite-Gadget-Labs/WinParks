@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -40,12 +41,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import com.elitegadgetlabs.borderhacks2021app.MainViewModel
 import com.elitegadgetlabs.borderhacks2021app.R
 import com.elitegadgetlabs.borderhacks2021app.components.GMap
 import com.elitegadgetlabs.borderhacks2021app.ui.theme.Shapes
 import com.elitegadgetlabs.borderhacks2021app.ui.theme.appBackgroundColor
+import com.elitegadgetlabs.borderhacks2021app.viewModels.FilterViewModel
 import com.elitegadgetlabs.borderhacks2021app.viewModels.SearchViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -64,7 +67,7 @@ import kotlin.collections.ArrayList
 
 @ExperimentalComposeUiApi
 @Composable
-fun MapsScreen(navController: NavController, mainViewModel: MainViewModel = MainViewModel()) {
+fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  mainViewModel: MainViewModel = MainViewModel()) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
     var selectedState = remember { mutableStateOf("maps_screen")}
@@ -79,6 +82,9 @@ fun MapsScreen(navController: NavController, mainViewModel: MainViewModel = Main
     var filteredLetters: ArrayList<String>
 
     val coroutineScope = rememberCoroutineScope()
+
+
+
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -160,6 +166,8 @@ fun MapsScreen(navController: NavController, mainViewModel: MainViewModel = Main
 
         }
 
+
+
         BottomAppBar(elevation = 0.dp, backgroundColor = MaterialTheme.colors.surface, modifier = Modifier.align(
             Alignment.BottomCenter)) {
             BottomNavigationItem(
@@ -234,12 +242,14 @@ fun MapsScreen(navController: NavController, mainViewModel: MainViewModel = Main
                     else{
                         IconButton(
                             onClick = {
+                                filterDialogState.value = true
+                                /*
                                 coroutineScope.launch {
                                     delay(1000)
                                     navController.navigate("filter_screen"){
 
                                     }
-                                }
+                                }*/
                             }
                         ) {
                             Icon(
@@ -315,6 +325,51 @@ fun MapsScreen(navController: NavController, mainViewModel: MainViewModel = Main
 
             Spacer(modifier = Modifier.height(30.dp))  //vertical spacer
 
+
+        }
+
+        //filterViewModel.filterDialogFlag.observe(navController.vie)
+        if (filterDialogState.value){
+            Snackbar(
+                modifier = Modifier
+                    .fillMaxWidth(0.97f)
+                    .fillMaxHeight(1f)
+                    .align(Alignment.Center)
+                    .padding(horizontal = 0.dp, vertical = 12.dp),
+                backgroundColor = Color.White
+            ){
+                Column(){
+                    Row(
+                        modifier = Modifier
+                            .height(50.dp)
+                            .fillMaxWidth()
+                            .background(color = appBackgroundColor, shape = Shapes.medium),
+                        Arrangement.SpaceEvenly
+                    ){
+                        IconButton(onClick = {
+                        filterDialogState.value = false
+                        }) {
+                            Icon(Icons.Filled.Close, "close icon", tint = Color.White)
+                        }
+
+                        Text(text = "Filters", color = White, modifier = Modifier.align(Alignment.CenterVertically), style = MaterialTheme.typography.h6)
+
+                        IconButton(onClick = {
+
+                        }) {
+                            Icon(Icons.Filled.Refresh, "refresh icon", tint = Color.White)
+                        }
+                    }
+
+
+
+                    FilterScreen(navController = navController, filterViewModel = filterViewModel)
+
+
+                }
+
+
+            }
 
         }
 

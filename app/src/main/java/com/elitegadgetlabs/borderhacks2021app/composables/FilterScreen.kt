@@ -31,42 +31,12 @@ fun FilterScreen(navController: NavController, filterViewModel: FilterViewModel)
 
     val coroutineScope = rememberCoroutineScope()
 
+    //var filterDialogState = remember { mutableStateOf(filterViewModel.getDialogClosed())}
+
 
     Scaffold(
 
-        topBar = {
-            TopAppBar(
-                title = {
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = "Filters",
-                            color = White,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                },
-                backgroundColor = appBackgroundColor,
-                navigationIcon = {
-                    IconButton(onClick = {
-                        coroutineScope.launch {
-                            delay(1000)
-                            navController.navigate("maps_screen"){
-                                popUpTo = navController.graph.startDestinationId
-                                launchSingleTop = true
-                            }
-                        }
-                    }) {
-                        Icon(Icons.Filled.Close, "close icon", tint = Color.White)
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {}) {
-                        Icon(Icons.Filled.Refresh, "refresh icon", tint = Color.White)
-                    }
-                }
 
-            )
-        }
 
     ) {
 
@@ -98,7 +68,7 @@ fun FilterListItem(
             .background(Color.White)
             .height(60.dp)
             .fillMaxWidth()
-            .padding(5.dp),
+            .padding(20.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
