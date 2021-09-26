@@ -80,7 +80,15 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
 
     val coroutineScope = rememberCoroutineScope()
 
-
+    fun navigate(dest: String){
+        coroutineScope.launch {
+            delay(1000)
+            navController.navigate(dest){
+                popUpTo = navController.graph.startDestinationId
+                launchSingleTop = true
+            }
+        }
+    }
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -173,7 +181,7 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
 
 
 
-        BottomAppBar(elevation = 0.dp, backgroundColor = MaterialTheme.colors.surface, modifier = Modifier.align(
+        BottomAppBar(elevation = 12.dp, backgroundColor = MaterialTheme.colors.surface, modifier = Modifier.align(
             Alignment.BottomCenter)) {
             BottomNavigationItem(
                 icon = {
@@ -183,7 +191,8 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
                 unselectedContentColor = Color.Black,
                 onClick = {
                     Log.d("debug", "Home")
-                    selectedState.value = "home"
+                    selectedState.value = "home_screen"
+                    navigate("home_screen")
                 },
                 selected = selectedState.value == "home_screen"
             )
@@ -196,7 +205,8 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
                 unselectedContentColor = Color.Black,
                 onClick = {
                     Log.d("debug", "Maps")
-                    selectedState.value = "Maps"
+                    selectedState.value = "maps_screen"
+                    navigate("maps_screen")
                 },
                 selected = selectedState.value == "maps_screen"
             )
@@ -209,7 +219,8 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
                 unselectedContentColor = Color.Black,
                 onClick = {
                     Log.d("debug", "Profile")
-                    selectedState.value = "profile"
+                    selectedState.value = "profile_screen"
+                    navigate("profile_screen")
                 },
                 selected = selectedState.value == "profile_screen"
             )
@@ -231,87 +242,12 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
                 navController
             )
 
-                                    }
-                                }*/
-                            }
-                        ) {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.ic_baseline_filter_list_24),
-                                contentDescription = "Filter",
-                                modifier = Modifier
-                                    .padding(15.dp)
-                                    .size(24.dp)
-                            )
-                        }
-                    }
-                },
-                textStyle = androidx.compose.ui.text.TextStyle.Default,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(elevation = 3.dp, shape = Shapes.medium),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        keyboardController?.hide()
-                    }
-                ),
-                placeholder = { Text(text = "Search for parks in Windsor...") },
-                onValueChange = {
-                    queryText.value = it
-                },
-                singleLine = true,
-                shape = Shapes.medium,
-                colors = TextFieldDefaults.textFieldColors(
-                    textColor = Color.Black,
-                    cursorColor = Color.Black,
-                    leadingIconColor = Color.Black,
-                    trailingIconColor = Color.Black,
-                    backgroundColor = Color.White,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                )
-            )
-
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                val searchText = queryText.value.text
-                filteredLetters = if (searchText.isEmpty()) {
-                    arrayListOf()
-                } else {
-                    val resultList = ArrayList<String>()
-                    for (letter in letterList) {
-                        if (letter.lowercase(Locale.getDefault())
-                                .contains(searchText.lowercase(Locale.getDefault()))
-                        ) {
-                            resultList.add(letter)
-                        }
-                    }
-                    resultList
-                }
-                items(filteredLetters) { filteredLetters ->
-                    LetterListItem(
-                        itemText = filteredLetters
-                    ) { selectedLetter ->
-                        Toast.makeText(
-                            navController.context,
-                            selectedLetter,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                }
-            }
-
 
             Spacer(modifier = Modifier.height(30.dp))  //vertical spacer
 
 
         }
 
-        //filterViewModel.filterDialogFlag.observe(navController.vie)
         if (filterDialogState.value){
             Snackbar(
                 modifier = Modifier
@@ -321,7 +257,7 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
                     .padding(horizontal = 0.dp, vertical = 12.dp),
                 backgroundColor = Color.White
             ){
-                Column(){
+                Column {
                     Row(
                         modifier = Modifier
                             .height(50.dp)
@@ -335,7 +271,8 @@ fun MapsScreen(navController: NavController, filterViewModel :FilterViewModel,  
                             Icon(Icons.Filled.Close, "close icon", tint = Color.White)
                         }
 
-                        Text(text = "Filters", color = White, modifier = Modifier.align(Alignment.CenterVertically), style = MaterialTheme.typography.h6)
+                        Text(text = "Filters", color = White, modifier = Modifier.align(Alignment.CenterVertically),
+                            style = MaterialTheme.typography.h6)
 
                         IconButton(onClick = {
 

@@ -72,8 +72,8 @@ class MainActivity : ComponentActivity(), LifecycleOwner {
 
         NavHost(navController = navController, startDestination = "maps_screen", builder = {
             composable("login_screen", content = { LoginScreen(navController = navController) })
-//            composable("filter_screen", content = { FilterScreen(navController = navController) })
-            composable("home_screen", content = { HomeScreen(navController = navController) })
+            composable("profile_screen", content = { ProfileScreen(navController = navController) })
+            composable("home_screen", content = { HomeScreen(navController = navController, filterViewModel = filterViewModel) })
             composable("register_screen", content = { RegisterScreen(navController = navController) })
             composable("maps_screen", content = { MapsScreen(navController = navController, filterViewModel = filterViewModel) })
             composable("email_confirmation_screen", content = { EmailConfirmationScreen(navController = navController) })
