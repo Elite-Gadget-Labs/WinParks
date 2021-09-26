@@ -181,6 +181,10 @@ class FilterViewModel : ViewModel() {
 //        filterDialogClosed.value = boolean
 //    }
 
+    val currentFilters: MutableLiveData<List<String>> by lazy {
+        MutableLiveData<List<String>>()
+    }
+
 
     private var filterBehaviourList : MutableLiveData<MutableList<Boolean>> = MutableLiveData(createBehaviourList())
     private val behaviour: MutableLiveData<MutableList<Boolean>> get() = filterBehaviourList
@@ -189,8 +193,14 @@ class FilterViewModel : ViewModel() {
         return behaviour.value?.get(index)
     }
 
+    fun getFilterDataList():MutableList<Boolean>? {
+        return behaviour.value
+    }
+
     fun setFilter(boolean: Boolean, index: Int){
         filterBehaviourList.value = editBehaviourList(boolean, index)
+        currentFilters.value = getFilterDataList()?.withIndex()?.filter{ (_, x) -> x }?.map { (i, _) -> filterList[i].name }
+        Log.d("debug", "APPLE PIE " + currentFilters.value.toString())
     }
 
     private fun createBehaviourList(): MutableList<Boolean>{

@@ -90,5 +90,9 @@ class MainViewModel: ViewModel() {
         return layer
     }
 
+    val parks = getParkData()
+    var parksLayer: GeoJsonLayer? = null
+    var trailsLayer : GeoJsonLayer? = null
+
 
 }

@@ -78,7 +78,7 @@ fun VerticalListItem(park: Park, modifier: Modifier = Modifier, context: Context
     }
 }
 
-fun getFirstNWords(s: String?, n: Int): String? {
+fun getFirstNWords(s: String?, n: Int): String {
     val sArr: List<String> = s?.split(" ")!!
     var firstStrs = ""
     for (i in 0 until n) firstStrs += sArr[i] + " "

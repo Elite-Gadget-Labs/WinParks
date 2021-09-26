@@ -91,10 +91,10 @@ fun FilterListItem(
 
         val isChecked = rememberSaveable { mutableStateOf(filterViewModel.getFilter(index)) }
 
-        isChecked.value?.let {
+        isChecked.value?.let { bool ->
             Checkbox(
                 modifier = Modifier,
-                checked = it,
+                checked = bool,
                 onCheckedChange ={
                     isChecked.value = it
                     filterViewModel.setFilter(it, index)
