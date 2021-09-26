@@ -25,6 +25,7 @@ class MainViewModel: ViewModel() {
 
     fun httpRequest(url: String): Response? {
 
+
         val request = Request.Builder()
             .url(url)
             .build()
@@ -57,6 +58,28 @@ class MainViewModel: ViewModel() {
 
     fun getParkGeoData(googleMap:GoogleMap): GeoJsonLayer? {
         val geoJson = httpRequest("https://borderhacks2021-default-rtdb.firebaseio.com/parkgeojson.json")?.body!!
+
+        val layer: GeoJsonLayer?
+        runBlocking(Dispatchers.IO) {
+            layer = GeoJsonLayer(googleMap, JSONObject(geoJson.string()))
+        }
+
+        return layer
+    }
+
+    fun getTrailData(googleMap:GoogleMap): GeoJsonLayer? {
+        val geoJson = httpRequest("https://borderhacks2021-default-rtdb.firebaseio.com/trails.json")?.body!!
+
+        val layer: GeoJsonLayer?
+        runBlocking(Dispatchers.IO) {
+            layer = GeoJsonLayer(googleMap, JSONObject(geoJson.string()))
+        }
+
+        return layer
+    }
+
+    fun getHeritageData(googleMap:GoogleMap): GeoJsonLayer? {
+        val geoJson = httpRequest("https://borderhacks2021-default-rtdb.firebaseio.com/heritage.json")?.body!!
 
         val layer: GeoJsonLayer?
         runBlocking(Dispatchers.IO) {

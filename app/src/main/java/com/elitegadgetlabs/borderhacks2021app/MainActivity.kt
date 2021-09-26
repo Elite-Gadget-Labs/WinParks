@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
 fun ShowLoginScreen(){
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "maps_screen", builder = {
+    NavHost(navController = navController, startDestination = "home_screen", builder = {
         composable("login_screen", content = { LoginScreen(navController = navController) })
         composable("filter_screen", content = { FilterScreen(navController = navController) })
         composable("home_screen", content = { HomeScreen(navController = navController) })
